@@ -13,16 +13,17 @@ export interface ISchedule {
     timeStart: Date;
     timeEnd: Date;
     location: string;
+    type: string;
     status: string;
     dateCreated: Date;
-    dateUpdate: Date;
+    dateUpdated: Date;
     creator: string;
     creatorId: number;
     attendees: number[];
 }
 
 export interface IScheduleDetails {
-    id: string;
+    id: number;
     title: string;
     description: string;
     timeStart: Date;
@@ -30,12 +31,12 @@ export interface IScheduleDetails {
     location: string;
     type: string;
     status: string;
-    dataCreated: Date;
+    dateCreated: Date;
     dateUpdated: Date;
     creator: string;
     creatorId: number;
-    attendess: IUser[];
-    statuses: string;
+    attendees: IUser[];
+    statuses: string[];
     types: string[];
 }
 

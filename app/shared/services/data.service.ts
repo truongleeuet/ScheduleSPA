@@ -1,12 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Http, Response, Headers } from "@angular/http";
-//Grab everything with import "rxjs/Rx";
 import { Observable } from "rxjs/Observable";
-import { Observer } from "rxjs/Observable";
+import { Observer } from "rxjs/Observer";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/catch";
 
-import {IUser, ISchedule, IScheduleDetails, Pagination, PaginationResult, PaginatedResult} from "../interfaces";
+import {IUser, ISchedule, IScheduleDetails, Pagination, PaginatedResult} from "../interfaces";
 import { ItemsService } from "../utils/items.service";
 import { ConfigService } from "../utils/config.service";
 
@@ -61,7 +60,7 @@ export class DataService {
     }
 
     getSchedules(page?: number, itemsPerPage?: number): Observable<PaginatedResult<ISchedule[]>> {
-        var peginatedResult: PaginatedResult<ISchedule[]> = new PaginatedResult<ISchedule[]>();
+        let peginatedResult: PaginatedResult<ISchedule[]> = new PaginatedResult<ISchedule[]>();
         let headers = new Headers();
         if (page != null && itemsPerPage != null) {
             headers.append("Pagination", page + "," + itemsPerPage);
@@ -73,7 +72,7 @@ export class DataService {
                 peginatedResult.result = res.json();
 
                 if (res.headers.get("Pagination") != null) {
-                    var paginationHeader: Pagination = this.itemsService.getSerialized<Pagination>(JSON.parse(res.headers.get("Pagination")));
+                    let paginationHeader: Pagination = this.itemsService.getSerialized<Pagination>(JSON.parse(res.headers.get("Pagination")));
                     console.log(paginationHeader);
                     peginatedResult.pagination = paginationHeader;
                 }
@@ -87,6 +86,13 @@ export class DataService {
             .map((res: Response) => {
                 return res.json();
             }).catch(this.handleError);
+    }
+    getScheduleDetails(id: number): Observable<IScheduleDetails> {
+        return this.http.get(this._baseUrl + "schedules/" + id + "/details")
+            .map((res: Response) => {
+                return res.json();
+            })
+            .catch(this.handleError);
     }
 
     updateSchedule(schedule: ISchedule): Observable<void> {
@@ -114,20 +120,20 @@ export class DataService {
     }
 
     private handleError(error: any) {
-        var applicationError = error.headers.get("Application-Error");
-        var serverError = error.json();
-        var modelStateErrors: string = '';
+        let applicationError = error.headers.get("Application-Error");
+        let serverError = error.json();
+        let modelStateErrors: string = "";
 
         if (!serverError.type) {
             console.log(serverError);
-            for(var key in serverError) {
+            for (let key in serverError) {
                 if (serverError[key]) {
                     modelStateErrors += serverError[key] + "\n";
                 }
             }
         }
 
-        modelStateErrors = modelStateErrors = '' ? null : modelStateErrors;
+        modelStateErrors = modelStateErrors = "" ? null : modelStateErrors;
         return Observable.throw(applicationError || modelStateErrors || "Server Error");
     }
 }
